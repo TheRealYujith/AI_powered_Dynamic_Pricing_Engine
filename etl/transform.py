@@ -8,6 +8,8 @@ def transform_data(df: pd.DataFrame) -> pd.DataFrame:
     df['Revenue'] = df['Price'] * df['Units Sold']
     
     # Convert categorical features
+    df["Product ID"] = df["Product ID"].str.extract(r'(\d+)$').astype(int) # str.extract(r'(\d+)$') - extracts the numeric part at the end of the string
+    df["Store ID"] = df["Store ID"].str.extract(r'(\d+)$').astype(int)
     df = pd.get_dummies(df, columns=['Weather Condition', 'Category', 'Region', 'Seasonality'], drop_first=True, dtype=int)
 
     # Add lag features
