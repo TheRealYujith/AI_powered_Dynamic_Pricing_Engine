@@ -2,13 +2,9 @@
 
 Automatically adjust product prices based on demand, inventory, competitor prices, and external factors to maximize revenue.
 
----
-
 ## Objective
 
 Dynamically optimize product prices daily to increase revenue while respecting pricing constraints (floor/ceiling).
-
----
 
 ## Key Features
 
@@ -19,8 +15,6 @@ Dynamically optimize product prices daily to increase revenue while respecting p
 - FastAPI-based pricing API  
 - SHAP-based explainability  
 
----
-
 ## 📊 Dataset
 
 **Source:** [Kaggle - Retail Store Inventory Forecasting](https://www.kaggle.com/datasets/anirudhchauhan/retail-store-inventory-forecasting-dataset)  
@@ -30,4 +24,3 @@ Dynamically optimize product prices daily to increase revenue while respecting p
 - `Inventory Level`, `Competitor Pricing`
 - `Holiday/Promotion`, `Weather Condition`
 
----
