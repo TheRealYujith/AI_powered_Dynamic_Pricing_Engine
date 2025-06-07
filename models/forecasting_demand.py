@@ -1,17 +1,10 @@
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import root_mean_squared_error
 from sklearn.model_selection import train_test_split
 import joblib
 
 def forecast_demand (df: pd.DataFrame):
-
-    # Encode IDs into integers
-    store_encoder = LabelEncoder()
-    product_encoder = LabelEncoder()
-    df["Store_ID"] = store_encoder.fit_transform(df["Store ID"])
-    df["Product_ID"] = product_encoder.fit_transform(df["Product ID"])
 
     # Get unique (store, product) pairs
     unique_pairs = df[["Store ID", "Product ID"]].drop_duplicates()
