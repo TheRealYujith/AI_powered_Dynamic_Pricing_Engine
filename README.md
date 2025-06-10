@@ -8,11 +8,9 @@ Dynamically optimize product prices daily to increase revenue while respecting p
 
 ## Key Features
 
-- Daily price updates  
 - Demand forecasting  
 - Price elasticity estimation  
 - Revenue optimization engine  
-- FastAPI-based pricing API  
 - SHAP-based explainability  
 
 ## 📊 Dataset
