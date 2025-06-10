@@ -49,5 +49,4 @@ def pricing_analysis(df:pd.DataFrame) -> List[dict]:
 
         print(f"Store: {store_id}, Product: {product_id} -> Optimal Price: {optimal_price:.2f}, Revenue: {max_revenue:.2f}")
 
-
     return results
