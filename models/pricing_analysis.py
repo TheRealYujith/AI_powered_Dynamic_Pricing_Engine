@@ -3,7 +3,7 @@ import numpy as np
 from typing import List
 import joblib
 
-def causal_pricing_analysis(df:pd.DataFrame) -> List[dict]:
+def pricing_analysis(df:pd.DataFrame) -> List[dict]:
     unique_pairs = df[["Store ID", "Product ID"]].drop_duplicates()
     price_range = df['Price'].values
     price_points = np.linspace(price_range.min(), price_range.max(), 50)
@@ -23,5 +23,31 @@ def causal_pricing_analysis(df:pd.DataFrame) -> List[dict]:
         except FileNotFoundError:
             print(f"Model not found for Store: {store_id}, Product: {product_id}")
             continue
+
+        # Use average of non-price features
+        avg_features = df_pair.drop(columns=["Date", "Demand Forecast", "Price"]).mean()
+
+        revenues = []
+        for price in price_points:
+            feature_vector = avg_features.copy()
+            feature_vector["Price"] = price
+            input_vector = feature_vector.values.reshape(1, -1)
+
+            forecasted_demand = model.predict(input_vector)[0]
+            revenue = forecasted_demand * price
+            revenues.append((price, revenue))
+
+        # Find price with max revenue
+        optimal_price, max_revenue = max(revenues, key=lambda x: x[1])
+
+        results.append({
+            "Store ID": store_id,
+            "Product ID": product_id,
+            "Optimal Price": round(optimal_price, 2),
+            "Expected Revenue": round(max_revenue, 2)
+        })
+
+        print(f"Store: {store_id}, Product: {product_id} -> Optimal Price: {optimal_price:.2f}, Revenue: {max_revenue:.2f}")
+
 
     return results
