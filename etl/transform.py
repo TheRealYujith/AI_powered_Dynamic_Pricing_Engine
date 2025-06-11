@@ -7,10 +7,13 @@ def transform_data(df: pd.DataFrame) -> pd.DataFrame:
     # Create revenue column
     df['Revenue'] = df['Price'] * df['Units Sold']
     
-    # Convert categorical features
+    # Convert categorical features into integers
     df["Product ID"] = df["Product ID"].str.extract(r'(\d+)$').astype(int) # str.extract(r'(\d+)$') - extracts the numeric part at the end of the string
     df["Store ID"] = df["Store ID"].str.extract(r'(\d+)$').astype(int)
-    df = pd.get_dummies(df, columns=['Weather Condition', 'Category', 'Region', 'Seasonality'], drop_first=True, dtype=int)
+    
+    # Each unique value is replaced with an integer
+    for col in ['Weather Condition', 'Category', 'Region', 'Seasonality']:
+        df[col], _ = pd.factorize(df[col])
 
     # Add lag features
     df = df.sort_values(by=["Product ID", "Date"])
