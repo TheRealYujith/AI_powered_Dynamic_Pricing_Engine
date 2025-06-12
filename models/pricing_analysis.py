@@ -1,9 +1,10 @@
 import pandas as pd
 import numpy as np
-from typing import List
-import joblib
+from keras.models import load_model
 
-def pricing_analysis(df:pd.DataFrame) -> List[dict]:
+def pricing_analysis(df_path: str):
+    
+    df = pd.read_csv(df_path)
     unique_pairs = df[["Store ID", "Product ID"]].drop_duplicates()
     price_range = df['Price'].values
     price_points = np.linspace(price_range.min(), price_range.max(), 50)
@@ -17,15 +18,15 @@ def pricing_analysis(df:pd.DataFrame) -> List[dict]:
         df_pair = df[(df["Store ID"] == store_id) & (df["Product ID"] == product_id)]
 
         # Load model
-        model_filename = f"models/model_{store_id}_{product_id}.pkl"
+        model_filename = f"models_lstm/model_{store_id}_{product_id}.h5"
         try:
-            model = joblib.load(model_filename)
-        except FileNotFoundError:
+            model = load_model(model_filename)
+        except OSError:
             print(f"Model not found for Store: {store_id}, Product: {product_id}")
             continue
 
         # Use average of non-price features
-        avg_features = df_pair.drop(columns=["Date", "Demand Forecast", "Price"]).mean()
+        avg_features = df_pair.drop(columns=["Date", "Units Sold", "Demand Forecast", "Price", "Revenue"]).mean()
 
         revenues = []
         for price in price_points:
@@ -33,7 +34,7 @@ def pricing_analysis(df:pd.DataFrame) -> List[dict]:
             feature_vector["Price"] = price
             input_vector = feature_vector.values.reshape(1, -1)
 
-            forecasted_demand = model.predict(input_vector)[0]
+            forecasted_demand = model.predict(input_vector)[0][0]
             revenue = forecasted_demand * price
             revenues.append((price, revenue))
 
@@ -49,4 +50,4 @@ def pricing_analysis(df:pd.DataFrame) -> List[dict]:
 
         print(f"Store: {store_id}, Product: {product_id} -> Optimal Price: {optimal_price:.2f}, Revenue: {max_revenue:.2f}")
 
-    return results
+    return pd.DataFrame(results)
