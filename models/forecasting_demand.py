@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import root_mean_squared_error
 from keras.models import Sequential
@@ -16,10 +15,11 @@ def create_sequences(data, seq_length):
         y.append(data[i+seq_length, -1])  # Last column is "Demand Forecast" (target variable)
     return np.array(X), np.array(y)
 
-def forecast_demand (df: pd.DataFrame, seq_length):
-    
-    # Convert Date to datetime - format is dd/mm/yyyy
-    df["Date"] = pd.to_datetime(df["Date"], format="%d/%m/%Y")
+def forecast_demand (df_path: str, seq_length: int) -> pd.DataFrame:
+ 
+    # Convert Date to datetime - format is yyyy/mm/dd
+    df = pd.read_csv(df_path)
+    df["Date"] = pd.to_datetime(df["Date"], format="%Y-%m-%d")
 
     # Extract useful time-based features
     df["DayOfWeek"] = df["Date"].dt.weekday # Monday = 0, Tuesday = 1, ..., 6 = Sunday
@@ -89,4 +89,4 @@ def forecast_demand (df: pd.DataFrame, seq_length):
 
     print(f"\nTotal models trained: {len(overall_metrics)}")
     
-    return overall_metrics
+    return pd.DataFrame(overall_metrics)
