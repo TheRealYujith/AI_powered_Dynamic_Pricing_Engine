@@ -51,3 +51,22 @@ def pricing_analysis(df_path: str):
         print(f"Store: {store_id}, Product: {product_id} -> Optimal Price: {optimal_price:.2f}, Revenue: {max_revenue:.2f}")
 
     return pd.DataFrame(results)
+
+def search_optimal_results(df: pd.DataFrame, store_id: str, product_id: int):
+    
+    id_combination = df[(df["Store ID"] == store_id) & (df["Product ID"] == product_id)]
+    
+    if id_combination.empty:
+        print(f"No results found for Store ID {store_id}, Product ID {product_id}.")
+        return None
+    
+    row = id_combination.iloc[0]
+    
+    return {
+        "Store ID": row["Store ID"],
+        "Product ID": row["Product ID"],
+        "Optimal Price": row["Optimal Price"],
+        "Expected Revenue": row["Expected Revenue"]
+    }
+
+    
