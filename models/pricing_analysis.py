@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import re
 from keras.models import load_model
 
 def pricing_analysis(df_path: str):
@@ -53,6 +54,10 @@ def pricing_analysis(df_path: str):
     return pd.DataFrame(results)
 
 def search_optimal_results(df: pd.DataFrame, store_id: str, product_id: int):
+    
+    # Extract the numerical part of the dataset
+    store_id = int(re.sub(r"\D", "", store_id))
+    product_id = int(re.sub(r"\D", "", product_id))
     
     id_combination = df[(df["Store ID"] == store_id) & (df["Product ID"] == product_id)]
     
