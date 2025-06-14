@@ -19,7 +19,7 @@ def pricing_analysis(df_path: str):
         df_pair = df[(df["Store ID"] == store_id) & (df["Product ID"] == product_id)]
 
         # Load model
-        model_filename = f"models_lstm/model_{store_id}_{product_id}.h5"
+        model_filename = f"models_lstm/model_{store_id}_{product_id}.keras"
         try:
             model = load_model(model_filename)
         except OSError:
