@@ -143,6 +143,12 @@ def forecast_demand (df_path: str, seq_length: int) -> pd.DataFrame:
         
         # Computing feature importance using SHAP
         shap_df = compute_global_shap_importance(model, X_train, X_test, features.tolist(), store_id, product_id)
+        
+        # Saving the shap dataframes in a sub folder
+        full_path = os.path.join("shap_values", f"shap_dataframe_{store_id}_{product_id}.csv")
+        os.makedirs("shap_values", exist_ok=True)
+        shap_df.to_csv(full_path, index=False)
+        
         all_shap_importances.append(shap_df)
 
     print(f"\nTotal models trained: {len(overall_metrics)}")
